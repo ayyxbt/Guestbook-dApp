@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GDGoC Guestbook
 
-## Getting Started
+An on-chain guestbook where visitors sign a permanent, wallet-verified message. Every entry is stored directly on the blockchain — connect a wallet to sign, or just browse the ledger with no wallet needed.
 
-First, run the development server:
+## Tech Stack
+
+- **Frontend:** Next.js, React, TypeScript, Tailwind CSS
+- **Blockchain:** Solidity, Hardhat, ethers.js v6
+- **Wallet connection:** MetaMask / injected wallet (via `window.ethereum`)
+
+## Network
+
+- **Chain:** Ethereum
+- **Network:** Sepolia Testnet <!-- update if different -->
+
+## Deployed Contract
+
+- **Contract Address:** `0x8A808Df403923426465705a799C81Fa972F5f148`
+- **Block Explorer:** [View on Sepolia Etherscan](https://sepolia.etherscan.io/address/0x8A808Df403923426465705a799C81Fa972F5f148)
+
+## Running Locally
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) v18 or later
+- [MetaMask](https://metamask.org/) (or another injected wallet extension) installed in your browser
+- A wallet funded with Sepolia testnet ETH (get some from a [Sepolia faucet](https://sepoliafaucet.com/)) if you plan to post entries
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/ayyxbt/Guestbook-dApp.git
+cd Guestbook-dApp
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Set up environment variables
+
+Create a `.env` (or `.env.local`) file in the project root with:
+
+```
+NEXT_PUBLIC_RPC_URL=your-sepolia-rpc-url-here
+```
+
+Get a free RPC URL from [Alchemy](https://www.alchemy.com/) or [Infura](https://www.infura.io/) by creating a free account and setting up an app for the Sepolia network.
+
+### 4. Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 5. Connect your wallet
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Make sure MetaMask is set to the **Sepolia** network, then click "Connect Wallet" to sign the guestbook.
 
-## Learn More
+## Smart Contract Development (optional)
 
-To learn more about Next.js, take a look at the following resources:
+If you want to modify or redeploy the contract:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+cd contracts
+npm install
+npx hardhat compile
+npx hardhat test
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+To deploy to Sepolia, configure your deployer wallet's private key and an RPC URL in `contracts/hardhat.config.ts`, then run your deployment script/Ignition module targeting the `sepolia` network.
