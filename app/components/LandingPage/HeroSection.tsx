@@ -2,7 +2,7 @@ import Link from "next/link"
 
 export default function Hero() {
   return (
-    <section className="font-poppins relative w-full overflow-hidden bg-linear-to-br from-blue-50 via-purple-50 to-orange-50 px-4 sm:px-6 py-16 sm:py-20 md:py-24">
+    <section className="font-poppins relative w-full overflow-hidden bg-linear-to-br from-blue-50 via-purple-50 to-orange-50 px-4 sm:px-6 min-h-screen flex items-center justify-center">
 
       <div className="relative max-w-3xl mx-auto flex flex-col items-center text-center">
        
