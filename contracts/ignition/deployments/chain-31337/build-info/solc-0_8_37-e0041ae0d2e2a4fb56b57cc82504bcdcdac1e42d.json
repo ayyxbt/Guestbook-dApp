@@ -1,0 +1,48 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_37-e0041ae0d2e2a4fb56b57cc82504bcdcdac1e42d",
+  "solcVersion": "0.8.37",
+  "solcLongVersion": "0.8.37+commit.f401782d",
+  "compilerType": "solc",
+  "toolVersions": {
+    "hardhat": "3.18.0"
+  },
+  "userSourceNameMap": {
+    "contracts/GuestBook.sol": "project/contracts/GuestBook.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode.linkReferences",
+            "evm.bytecode.object",
+            "evm.bytecode.opcodes",
+            "evm.bytecode.sourceMap",
+            "evm.deployedBytecode.immutableReferences",
+            "evm.deployedBytecode.linkReferences",
+            "evm.deployedBytecode.object",
+            "evm.deployedBytecode.opcodes",
+            "evm.deployedBytecode.sourceMap",
+            "evm.methodIdentifiers"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/GuestBook.sol": {
+        "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.37;\r\n\r\ncontract Guestbook {\r\n    struct Post {\r\n        address user;\r\n        string post;\r\n        uint256 timestamp;\r\n    }\r\n\r\n    uint256 public constant MAX_MESSAGE_BYTES = 140;\r\n\r\n    Post[] private userPosts;\r\n\r\n    // Tracks whether an address has already posted.\r\n    mapping(address => bool) public hasPosted;\r\n\r\n    event PostedContent(\r\n        address indexed user,\r\n        string post,\r\n        uint256 timestamp\r\n    );\r\n\r\n    error PostTooLong();\r\n    error HasAlreadyPosted();\r\n    error EmptyMessage();\r\n    error InvalidIndex();\r\n\r\n    function makePost(string calldata message) external {\r\n        if (hasPosted[msg.sender]) revert HasAlreadyPosted();\r\n\r\n        uint256 messageLength = bytes(message).length;\r\n        if (messageLength == 0) revert EmptyMessage();\r\n        if (messageLength > MAX_MESSAGE_BYTES) revert PostTooLong();\r\n\r\n        hasPosted[msg.sender] = true;\r\n\r\n        uint256 timestamp = block.timestamp;\r\n        userPosts.push(\r\n            Post({user: msg.sender, post: message, timestamp: timestamp})\r\n        );\r\n\r\n        emit PostedContent(msg.sender, message, timestamp);\r\n    }\r\n\r\n    function getPostLength() external view returns (uint256) {\r\n        return userPosts.length;\r\n    }\r\n\r\n    function getEntry(uint256 index) external view returns (Post memory) {\r\n        if (index >= userPosts.length) revert InvalidIndex();\r\n        return userPosts[index];\r\n    }\r\n\r\n    function getAllEntries() external view returns (Post[] memory) {\r\n        return userPosts;\r\n    }\r\n}\r\n"
+      }
+    }
+  }
+}

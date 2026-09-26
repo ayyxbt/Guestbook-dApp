@@ -1,0 +1,50 @@
+import hardhatToolboxMochaEthersPlugin from "@nomicfoundation/hardhat-toolbox-mocha-ethers";
+import { defineConfig } from "hardhat/config";
+import * as dotenv from "dotenv";
+
+// Load the .env file
+dotenv.config();
+
+const rpcUrl = process.env.SEPOLIA_RPC_URL;
+const privateKey = process.env.SEPOLIA_PRIVATE_KEY;
+
+if (!rpcUrl || !privateKey) {
+  console.error("❌ ERROR: .env file is missing or variables are not loading correctly.");
+}
+
+export default defineConfig({
+  plugins: [hardhatToolboxMochaEthersPlugin],
+  solidity: {
+    profiles: {
+      default: {
+        version: "0.8.37",
+      },
+      production: {
+        version: "0.8.37",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+    },
+  },
+  networks: {
+    hardhatMainnet: {
+      type: "edr-simulated",
+      chainType: "l1",
+    },
+    hardhatOp: {
+      type: "edr-simulated",
+      chainType: "op",
+    },
+    sepolia: {
+      type: "http",
+      chainType: "l1",
+      // If undefined, provide a valid URL string to prevent Hardhat from crashing
+      url: rpcUrl || "https://dummy-rpc-url.com",
+      accounts: privateKey ? [privateKey] : [],
+    },
+  },
+});
