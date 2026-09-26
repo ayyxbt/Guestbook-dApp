@@ -6,13 +6,13 @@ import RecentSignatures from "../components/Dashboard/RecentMessages"
 import { useGuestbookEntries } from "@/hooks/useGuestbookEntries"
 
 export default function Dashboard() {
-    const { entries, loading, refetch } = useGuestbookEntries()
+    const { refetch } = useGuestbookEntries()
 
     return (
         <>
             <Navbar />
             <MessageComposer onPosted={refetch} />
-            <RecentSignatures entries={entries} globalCount={entries.length} loading={loading} />
+            <RecentSignatures />
         </>
     )
 }
