@@ -5,17 +5,17 @@ export default function Hero() {
     <section className="font-poppins relative w-full overflow-hidden bg-white px-4 sm:px-6 py-16 sm:py-20 md:py-24">
 
       <div className="relative max-w-3xl mx-auto flex flex-col items-center text-center">
-       
+
         {/* Headline */}
         <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 leading-tight tracking-tight break-words">
           Leave your
           <br />
           <span className="relative inline-block">
             <span
-              className="bg-clip-text text-transparent"
+              className="bg-clip-text text-transparent bg-size-[200%_auto] animate-gradient"
               style={{
                 backgroundImage:
-                  "linear-gradient(to right, #4285F4, #EA4335, #FBBC05, #34A853)",
+                  "linear-gradient(to right, #4285F4, #EA4335, #FBBC05, #34A853, #4285F4)",
               }}
             >
               digital mark
