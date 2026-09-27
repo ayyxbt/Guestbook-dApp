@@ -10,7 +10,8 @@ function shortenAddress(addr: string) {
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const { account, connecting, connect, disconnect } = useWallet()
+  const [walletMenuOpen, setWalletMenuOpen] = useState(false)
+  const { account, connecting, connectInjected, connectWalletConnect, disconnect } = useWallet()
 
   const label = connecting ? "Connecting..." : account ? shortenAddress(account) : "Connect Wallet"
 
@@ -18,7 +19,16 @@ export default function Navbar() {
     if (account) {
       disconnect()
     } else {
-      connect()
+      setWalletMenuOpen((v) => !v)
+    }
+  }
+
+  function handleConnectOption(method: "injected" | "walletconnect") {
+    setWalletMenuOpen(false)
+    if (method === "injected") {
+      connectInjected()
+    } else {
+      connectWalletConnect()
     }
   }
 
@@ -32,16 +42,36 @@ export default function Navbar() {
           </p>
         </div>
 
-        <button
-          onClick={handleClick}
-          disabled={connecting}
-          className="hidden md:flex items-center gap-2 bg-gray-900 text-white rounded-full px-5 py-3 shadow-sm text-xs sm:text-sm font-semibold hover:bg-gray-800 transition-colors shrink-0 disabled:opacity-60"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-2M13 12h7l-2-2m0 4l2-2" />
-          </svg>
-          {label}
-        </button>
+        {/* Desktop connect button + dropdown */}
+        <div className="hidden md:block relative shrink-0">
+          <button
+            onClick={handleClick}
+            disabled={connecting}
+            className="flex items-center gap-2 bg-gray-900 text-white rounded-full px-5 py-3 shadow-sm text-xs sm:text-sm font-semibold hover:bg-gray-800 transition-colors disabled:opacity-60"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-2M13 12h7l-2-2m0 4l2-2" />
+            </svg>
+            {label}
+          </button>
+
+          {walletMenuOpen && !account && (
+            <div className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-lg p-2 flex flex-col gap-1 z-10">
+              <button
+                onClick={() => handleConnectOption("injected")}
+                className="text-left px-4 py-2.5 text-xs font-semibold text-gray-800 hover:bg-gray-50 rounded-xl transition-colors"
+              >
+                Browser Wallet
+              </button>
+              <button
+                onClick={() => handleConnectOption("walletconnect")}
+                className="text-left px-4 py-2.5 text-xs font-semibold text-gray-800 hover:bg-gray-50 rounded-xl transition-colors"
+              >
+                WalletConnect (Mobile)
+              </button>
+            </div>
+          )}
+        </div>
 
         <button
           onClick={() => setMenuOpen(!menuOpen)}
@@ -71,14 +101,32 @@ export default function Navbar() {
         }`}
       >
         <div className="overflow-hidden">
-          <div className="bg-white rounded-2xl shadow-sm p-4 flex flex-col gap-4">
-            <button
-              onClick={handleClick}
-              disabled={connecting}
-              className="w-full flex items-center justify-center gap-2 bg-gray-900 text-white rounded-full px-5 py-3 text-xs font-semibold hover:bg-gray-800 transition-colors disabled:opacity-60"
-            >
-              {label}
-            </button>
+          <div className="bg-white rounded-2xl shadow-sm p-4 flex flex-col gap-2">
+            {account ? (
+              <button
+                onClick={disconnect}
+                className="w-full flex items-center justify-center gap-2 bg-gray-900 text-white rounded-full px-5 py-3 text-xs font-semibold hover:bg-gray-800 transition-colors"
+              >
+                {label}
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={() => handleConnectOption("injected")}
+                  disabled={connecting}
+                  className="w-full flex items-center justify-center gap-2 bg-gray-900 text-white rounded-full px-5 py-3 text-xs font-semibold hover:bg-gray-800 transition-colors disabled:opacity-60"
+                >
+                  Browser Wallet
+                </button>
+                <button
+                  onClick={() => handleConnectOption("walletconnect")}
+                  disabled={connecting}
+                  className="w-full flex items-center justify-center gap-2 bg-white text-gray-800 border border-gray-200 rounded-full px-5 py-3 text-xs font-semibold hover:bg-gray-50 transition-colors disabled:opacity-60"
+                >
+                  WalletConnect (Mobile)
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
