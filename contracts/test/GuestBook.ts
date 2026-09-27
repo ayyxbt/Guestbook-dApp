@@ -4,7 +4,7 @@ import { network } from "hardhat";
 describe("Guestbook", function () {
   let ethers: any;
 
-  // Hardhat 3 requires you to extract ethers from a network connection
+
   before(async function () {
     ({ ethers } = await network.create());
   });

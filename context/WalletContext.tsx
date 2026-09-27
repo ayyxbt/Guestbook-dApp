@@ -37,6 +37,19 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     setContract(contract)
   }, [])
 
+  const disconnect = useCallback(() => {
+    const rawProvider = rawProviderRef.current
+    // WalletConnect's provider needs an explicit disconnect call to close the session;
+    // an injected wallet (MetaMask) has no such method, hence the optional check.
+    if (rawProvider?.disconnect) {
+      rawProvider.disconnect()
+    }
+    rawProviderRef.current = null
+    setAccount(null)
+    setSigner(null)
+    setContract(null)
+  }, [])
+
   const connectInjected = useCallback(async () => {
     if (!window.ethereum) {
       alert("No wallet found. Please install MetaMask or another injected wallet.")
@@ -71,21 +84,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     } finally {
       setConnecting(false)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setupFromRawProvider])
-
-  const disconnect = useCallback(() => {
-    const rawProvider = rawProviderRef.current
-    // WalletConnect's provider needs an explicit disconnect call to close the session;
-    // an injected wallet (MetaMask) has no such method, hence the optional check.
-    if (rawProvider?.disconnect) {
-      rawProvider.disconnect()
-    }
-    rawProviderRef.current = null
-    setAccount(null)
-    setSigner(null)
-    setContract(null)
-  }, [])
+  }, [setupFromRawProvider, disconnect])
 
   useEffect(() => {
     if (!window.ethereum?.on) return
